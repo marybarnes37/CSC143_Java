@@ -15,6 +15,8 @@ public class Unit
     private double standardPrice;
     private double rentalPrice;
     private boolean isRented;
+    private Customer customer;
+    private Date rentalDate;
 
     /**
      * Constructor for objects of class Unit
@@ -41,6 +43,7 @@ public class Unit
         this.length = length;
         this.height = height;
         standardPrice = width * length * height * typePremium;
+        isRented = false; 
         // figure out rentalPrice;
  
     }
@@ -51,9 +54,49 @@ public class Unit
      * @param  y  a sample parameter for a method
      * @return    the sum of x and y
      */
-    public int sampleMethod(int y)
+ 
+    public Customer getCustomer()
     {
-        // put your code here
-        return width;
+        return customer;
+    }
+    public Type getType()
+    {
+        return type;
+    }
+    public double getStandardPrice()
+    {
+        return standardPrice;
+    }
+    public double getPrice()
+    {
+        if (!(rentalPrice == 0.0)){
+            return rentalPrice;
+        }
+        else {
+            return standardPrice;
+        } 
+    }
+    public Date getRentalDate()
+    {
+        return rentalDate;
+    }
+    public boolean isRented()
+    {
+        return isRented;
+    }
+    public void rentUnit( Date date, Customer customer, double monthlyDiscount ) 
+    {
+        isRented = true;
+        this.customer = customer;
+        rentalDate = date;
+        rentalPrice = standardPrice - monthlyDiscount;
+    }
+    public void releaseUnit()
+    {
+        isRented = false;
+        rentalPrice = 0.0;
+    }
+    public String toString()
+    {
     }
 }
