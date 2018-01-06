@@ -1,13 +1,15 @@
 #BlueJ class context
 comment0.target=Customer
 comment0.text=\n\ Write\ a\ description\ of\ class\ Customer\ here.\n\n\ @author\ (your\ name)\n\ @version\ (a\ version\ number\ or\ a\ date)\n
-comment1.params=name\ phone\ number
-comment1.target=Customer(java.lang.String,\ java.lang.String,\ int)
+comment1.params=name\ phone
+comment1.target=Customer(java.lang.String,\ java.lang.String)
 comment1.text=\n\ Constructor\ for\ objects\ of\ class\ Customer\n
 comment10.params=amount
 comment10.target=java.lang.Double\ charge(double)
-comment11.params=
-comment11.target=java.lang.String\ toString()
+comment11.params=amount
+comment11.target=void\ checkAmount(double)
+comment12.params=
+comment12.target=java.lang.String\ toString()
 comment2.params=name
 comment2.target=void\ checkName(java.lang.String)
 comment2.text=\n\ An\ example\ of\ a\ method\ -\ replace\ this\ comment\ with\ your\ own\n\n\ @param\ \ y\ \ a\ sample\ parameter\ for\ a\ method\n\ @return\ \ \ \ the\ sum\ of\ x\ and\ y\n
@@ -25,4 +27,4 @@ comment8.params=phone
 comment8.target=void\ setPhone(java.lang.String)
 comment9.params=amount
 comment9.target=java.lang.Double\ credit(double)
-numComments=12
+numComments=13

@@ -10,13 +10,12 @@ public class Customer
     // instance variables - replace the example below with your own
     private String name;
     private String phone;
-    private int number;
     private double balance;
 
     /**
      * Constructor for objects of class Customer
      */
-    public Customer(String name, String phone, int number)
+    public Customer(String name, String phone)
     {
         // check preconditions
         checkName(name);
@@ -25,7 +24,6 @@ public class Customer
         // initialise instance variables
         this.name = name;
         this.phone = phone;
-        this.number = number;
     }
 
     /**
@@ -70,16 +68,23 @@ public class Customer
     }
     public Double credit( double amount )
     {
+        checkAmount(amount);
         balance += amount;
         return balance;
     }
     public Double charge( double amount ) 
     {
+        checkAmount(amount);
         balance -= amount;
         return balance;
     }
+    private void checkAmount( double amount){
+        if (amount <= 0){
+            throw new IllegalArgumentException("Amount must be non-negative.");
+        }
+    }
     public String toString() 
     {
-        return name;
+        return "name: " + name + "\nphone: " + phone + "\nbalance: " + balance;
     }
 }
