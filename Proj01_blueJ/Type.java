@@ -1,9 +1,9 @@
 
 /**
- * Enumeration class Type - write a description of the enum class here
+ * The three types of units available at storage locations. 
  *
- * @author (your name here)
- * @version (version number or date here)
+ * @author Mary Barnes
+ * @version 1/8/2017
  */
 public enum Type{
     REGULAR, HUMIDITY, TEMPERATURE

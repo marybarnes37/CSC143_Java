@@ -8,19 +8,18 @@ public class Unit
 {
 
     // instance variables - replace the example below with your own
-    private boolean isRented;       
+    private boolean isRented = false;       
     private Date rentalDate;
     private Customer customer;
     private double rentalPrice;
+    private double monthlyDiscount;
     private double standardPrice;
     private int length;
     private int width;
     private int height;
     private Type type;
-
-
-
-
+    private final double PRICE_NORMALIZATION = 15.0;
+    
 
     /**
      * Constructor for objects of class Unit
@@ -34,11 +33,11 @@ public class Unit
         // determine typePremium
         double typePremium = 1;
         switch (type) {
-            case REGULAR:       typePremium = 1;
+            case REGULAR:       typePremium = 1.0;
                                 break;
             case HUMIDITY:      typePremium = 1.5;
                                 break;
-            case TEMPERATURE:   typePremium = 2;
+            case TEMPERATURE:   typePremium = 2.0;
                                 break;       
         }
         // initialise instance variables
@@ -46,31 +45,50 @@ public class Unit
         this.length = length;
         this.width = width;
         this.height = height;
-        standardPrice = (double)(typePremium * length * width * height) / 20;
-        isRented = false; 
-        // figure out rentalPrice;
+        standardPrice = (double)(typePremium * length * width * height) / PRICE_NORMALIZATION;
  
     }
 
+    
     /**
-     * An example of a method - replace this comment with your own
+     * Get the customer renting the unit
      *
-     * @param  y  a sample parameter for a method
-     * @return    the sum of x and y
+     * @return    the customer renting the unit
      */
  
     public Customer getCustomer()
     {
         return customer;
     }
+    
+    
+    /**
+     * Get the type of the unit
+     *
+     * @return    the type of the unit
+     */
     public Type getType()
     {
         return type;
     }
+    
+    
+    /**
+     * Get the standard price of the unit
+     *
+     * @return    the standard price of the unit
+     */
     public double getStandardPrice()
     {
         return standardPrice;
     }
+    
+    
+    /**
+     * Get the price of the unit. Returns the rental price if the unit is rented. Otherwise returns the Standard Price. 
+     *
+     * @return    the standard price of the unit
+     */
     public double getPrice()
     {
         if (!(rentalPrice == 0.0)){
@@ -80,14 +98,38 @@ public class Unit
             return standardPrice;
         } 
     }
+    
+    
+    /**
+     * Get the rental start date of the unit
+     *
+     * @return    the rental start date of the unit
+     */
     public Date getRentalDate()
     {
         return rentalDate;
     }
+    
+    
+    /**
+     * Get whether or not the unit is rented.
+     *
+     * @return    true if unit is rented, false if unit is empty
+     */
     public boolean isRented()
     {
         return isRented;
     }
+    
+    
+     /**
+     * Rent the unit at a discount. 
+     *
+     * @param  date  the date the rental starts
+     * @param  customer  the customer of the unit
+     * @param  monthlyDiscount  the discount
+     * @throws IllegalArgumentException
+     */
     public void rentUnit( Date date, Customer customer, double monthlyDiscount ) 
     {
         if (date == null || customer == null){
@@ -99,27 +141,70 @@ public class Unit
         isRented = true;
         this.customer = customer;
         rentalDate = date;
+        this.monthlyDiscount = monthlyDiscount;
         rentalPrice = standardPrice - monthlyDiscount;
     }
+
+    
+    
+     /**
+     * Rent the unit without a discount.
+     *
+     * @param  date  the date the rental starts
+     * @param  customer  the customer of the unit
+     * @throws IllegalArgumentException
+     */
     public void rentUnit( Date date, Customer customer) 
     {
         rentUnit(date, customer, 0.0);
     }
+    
+    
+    /**
+     * Set the monthly discount.
+     *
+     * @param  monthlyDiscount  the discount
+     * @throws IllegalArgumentException
+     */
+    public void setDiscount(double monthlyDiscount ) 
+    {
+        if (monthlyDiscount < 0.0){
+            throw new IllegalArgumentException("Monthly discount must be a positive amount.");
+        }
+        this.monthlyDiscount = monthlyDiscount;
+        rentalPrice = standardPrice - monthlyDiscount;
+    }
+    
+    
+     /**
+     * An example of a method - replace this comment with your own
+     *
+     * @param  y  a sample parameter for a method
+     * @return    the sum of x and y
+     */
     public void releaseUnit()
     {
         isRented = false;
         rentalPrice = 0.0;
     }
-    public String toString()
+    
+    
+    
+     /**
+     * An example of a method - replace this comment with your own
+     *
+     * @param  y  a sample parameter for a method
+     * @return    the sum of x and y
+     */public String toString()
     {
         if (isRented){
-            return ("rented: " + isRented + "\ncustomer: " + customer.getName() +  "\nrental_date: " + rentalDate + 
-                    "\nrental_price: " + rentalPrice + "\nstandard_price: " + standardPrice + "\ndimensions: " 
-                    + length + "x" + width + "x" + height + "\ntype: " + type);
+            return ("\nrented: " + isRented + "\t " + customer.toString() +  "rental_date: " + rentalDate.toString() + 
+                    "\trental_price: " + rentalPrice + "\tstandard_price: " + standardPrice + "\tdimensions: " 
+                    + length + "x" + width + "x" + height + "\ttype: " + type + "\n");
         }
         else{
-            return ("rented: " + isRented + "\nstandard_price: " + standardPrice + "\ndimensions: " 
-                    + length + "x" + width + "x" + height + "\ntype: " + type);
+            return ("\nrented: " + isRented + "\tstandard_price: " + standardPrice + "\tdimensions: " 
+                    + length + "x" + width + "x" + height + "\ttype: " + type + "\n");
         }
     }
 }

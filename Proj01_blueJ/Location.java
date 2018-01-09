@@ -1,9 +1,14 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 /**
- * Write a description of class Location here.
+ * A storage location with 240 storage units and up to 240 customers. 
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Mary
+ * @version 1/8/2018
+ * 
+ *
  */
 public class Location
 {
@@ -12,12 +17,14 @@ public class Location
     private Unit[][] units;
     private Customer[] customers;
     private int customerCount;
+    private static final int LENGTH_WIDTH_BASE = 4;
+    private static final int HEIGHT_BASE = 6;
     // static Map<String, int> stateCounter = new HashMap<String, int>(); // make this a hash table!! ie, Python dictionary
 
     /**
      * Constructor for objects of class Location
      */
-    public Location(String state, String city, String strNumber)
+    public Location(String state, String city, String strNumber) throws FileNotFoundException
     {
         // check preconditions, including 
         if (!state.matches("[A-Z]{2}") || !city.matches("[A-Z]{1}[a-zA-Z]+$")) {
@@ -40,11 +47,12 @@ public class Location
         designation = state + strNumber  + city;
         customers = new Customer[240];
         units = new Unit[12][20];
+        
         // the following section initializes all units, creating a variety of type and size combinations. 
         Type type = Type.REGULAR;
-        int length = 4;
-        int width = 4;
-        int height = 6;
+        int length = LENGTH_WIDTH_BASE;
+        int width = LENGTH_WIDTH_BASE;
+        int height = HEIGHT_BASE;
         for (int row = 0; row < units.length; row++){
             if (row % 4 == 0) {
                 length += 4; // rows 0-3 = 8ft; 4-7 = 12ft, 8-11 = 16ft
@@ -65,17 +73,26 @@ public class Location
                 }
                 units[row][unit] = new Unit(type, length, width, height);
             }
-            width = 4; // reset width to minimum after each row
+            width = LENGTH_WIDTH_BASE; // reset width to minimum after each row
         }
-        
+        // add customers to customer list
+        Scanner input = new Scanner( new File("customers.txt"));
+        while (input.hasNextLine()) {
+            String[] line = input.nextLine().split(",");
+            String name = line[0];
+            String phone = line[1].replaceAll("\\s","");
+            customers[customerCount] = new Customer(name, phone);
+            customerCount++;
+            
+        }
         
     }
 
+    
     /**
-     * An example of a method - replace this comment with your own
+     * Get the location's designation. 
      *
-     * @param  y  a sample parameter for a method
-     * @return    the sum of x and y
+     * @return  the designation
      */
     public String getDesignation()
     {
@@ -83,24 +100,48 @@ public class Location
         return this.designation; 
     }
     
+    
+     /**
+     * Get the unit at the specified location.
+     *
+     * @param row the row number
+     * @param unit the unit number
+     * @return  the unit specified
+     */
     public Unit getUnit( int row, int unit )
     {
         return this.units[row][unit];
     }
+    
+    
+     /**
+     * Get the specified customer. 
+     *
+     * @param index the index of the customer
+     * @return  the specified customer of x and y
+     */
     public Customer getCustomer( int index )
     {
         return this.customers[index];
     }
+    
+    
+     /**
+     * Get the customer count. 
+     *
+     * @return  the customer count
+     */
     public int getCustCount()
     {
         return this.customerCount;
     }
-        /**
-     * An example of a method - replace this comment with your own
+    
+    
+    /**
+     * Add a customer. 
      *
-     * @param  name  
-     * @param phone
-     * @return    
+     * @param name the first and last name of the customer in format John Smith
+     * @param phone the phone number of the customer in format ##########
      * @throws  IllegalArgumentException
      */
     public void addCustomer( String name, String phone )
@@ -108,6 +149,14 @@ public class Location
         customers[customerCount] = new Customer(name, phone);
         customerCount++;
     }
+    
+    
+     /**
+     * Get the units for the specified customer. 
+     *
+     * @param customer the customer of interest
+     * @return  the units associated with the specified customer
+     */
     public Unit[] getUnitsForCustomer( Customer customer )
     {
         if (customer == null){
@@ -125,6 +174,14 @@ public class Location
         }
         return customersUnits;   
     }
+    
+    
+     /**
+     * Charge rent for all units belonging to the location. 
+     *
+     * @param y a sample parameter for a method
+     * @return  the sum of x and y
+     */
     public void chargeRent()
     {
         double price;
@@ -137,6 +194,13 @@ public class Location
             }
         }    
     }
+    
+    
+     /**
+     * Get actual and potential monthly revenue.
+     *
+     * @return  array including actual revenue and possible revenue
+     */
     public double[] getMonthlyRevenue()
     {
         double revenue = 0;
@@ -151,6 +215,13 @@ public class Location
         } 
         return new double[]{revenue, possibleRevenue};
     }
+    
+    
+     /**
+     * Get the empty (unrented) units.
+     *
+     * @return  array of empty units
+     */
     public Unit[] getEmptyUnits( )
     {
         Unit[] emptyUnits = new Unit[240];
@@ -165,6 +236,14 @@ public class Location
             }
         return emptyUnits;
         }
+    
+        
+     /**
+     * Get the empty (unrented) units of a specified type.  
+     *
+     * @param  type  the type of unit
+     * @return    array of empty units
+     */    
     public Unit[] getEmptyUnits( Type type )
     {
         Unit[] emptyUnits = new Unit[240];
@@ -179,20 +258,44 @@ public class Location
             }
         return emptyUnits;
     }
-    public int countEmptyUnits( Unit[] arr){
-        int emptyCount = 0;
-        for (int unit = 0; unit < arr.length; unit++){
-            if (arr[unit] != null){
-                emptyCount++;
+ 
+    
+     /**
+     * Get the number of null units in an array. 
+     *
+     * @param  units  the array of units to be counted
+     * @return    the number of empty units
+     */
+    public int countNullUnits( Unit[] units){
+        int nullCount = 0;
+        for (int unit = 0; unit < units.length; unit++){
+            if (units[unit] == null ){
+                nullCount++;
             }
         }
-        return emptyCount;
+        return nullCount;
     }
+    
+    
+     /**
+     * Get the string representation of the location. 
+     *
+     * @return    the string representation of the location
+     */
     public String toString()
     {
         double[] revenue = getMonthlyRevenue();
-        return ("designation: " + designation + "\ncustomer_count: " + customerCount + "\ntotal_units: " 
-                + (units.length * units[0].length) + "\nempty_units: " + countEmptyUnits(getEmptyUnits()) +
-                "\ncurrent_monthly_revenue: " + revenue[0] + "\npossible_monthly_revenue: " + revenue[1]);
+        String locationString =  ("\ndesignation: " + designation + "\ncustomer_count: " + customerCount + "\n# total_units: " 
+                + (units.length * units[0].length) + "\n# empty_units: " + (getEmptyUnits().length - countNullUnits(getEmptyUnits())) +
+                "\ncurrent_monthly_revenue: " + revenue[0] + "\npossible_monthly_revenue: " + revenue[1] +
+                "\n\nUNITS:" + units.toString());
+        for (int row = 0; row < units.length; row++){
+            for (int unit = 0; unit < units[row].length; unit++){
+                locationString += "\nunit " + row + "-" + unit + "\t";
+                locationString += units[row][unit].toString();
+            }
+        }
+        return locationString;
+                
     }
 }
