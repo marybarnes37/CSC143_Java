@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.target=Helpers
+comment0.text=\n\ Helpers\ needed\ in\ all\ classes.\n\n\ @author\ Mary\n\ @version\ 1/8/2018\n
+comment1.params=money
+comment1.target=java.lang.String\ formatMoney(double)
+comment1.text=\n\ Format\ an\ amount\ as\ US\ currency.\ \n\n\ @param\ \ money\ \ the\ money\ to\ be\ formatted\ as\ a\ string\n\ @return\ \ \ \ the\ money\ formatted\ as\ a\ string\n
+numComments=2

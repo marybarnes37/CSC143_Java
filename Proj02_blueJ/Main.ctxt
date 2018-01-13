@@ -1,0 +1,19 @@
+#BlueJ class context
+comment0.target=Main
+comment0.text=\n\ Write\ a\ description\ of\ class\ Main\ here.\n\n\ @author\ (your\ name)\n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment1.params=answer\ console
+comment1.target=java.util.Scanner\ checkInput(java.lang.String,\ java.util.Scanner)
+comment2.params=console\ message
+comment2.target=java.util.Scanner\ converseWithUser(java.util.Scanner,\ java.lang.String)
+comment3.params=units\ myLocation
+comment3.target=void\ printUnitArray(Unit[],\ Location)
+comment4.params=myLocation
+comment4.target=void\ printCustomers(Location)
+comment5.params=myLocation
+comment5.target=void\ printRevenue(Location)
+comment6.params=myLocation
+comment6.target=void\ printStatusOfUnits(Location)
+comment7.params=args
+comment7.target=void\ main(java.lang.String[])
+comment7.text=\n\ Main\ method\ demonstrating\ the\ capacity\ of\ the\ other\ classes\ in\ project\ 1.\n\n
+numComments=8
