@@ -8,16 +8,15 @@ import org.junit.Test;
 /**
  * The test class LocationTest.
  *
- * @author  (your name)
- * @version (a version number or a date)
+ * @author Mary
+ * @version 1/15/18
  */
 public class LocationTest
 {
     /**
      * Default constructor for test class LocationTest
      */
-    public LocationTest()
-    {
+    public LocationTest(){
     }
 
     
@@ -27,8 +26,7 @@ public class LocationTest
      * Called before every test case method.
      */
     @Before
-    public void setUp()
-    {
+    public void setUp(){
     }
 
     
@@ -38,26 +36,24 @@ public class LocationTest
      * Called after every test case method.
      */
     @After
-    public void tearDown()
-    {
+    public void tearDown(){
     }
     
     
     @Test
-    public void testConstructor() throws FileNotFoundException
-    {
-        Location myLocation = new Location("WA", "Seattle", "01");
+    public void testConstructor() throws FileNotFoundException{
+        Location myLocation = new Location("WA01Seattle", 10.0);
         assertEquals("WA01Seattle", myLocation.getDesignation());
-        assertEquals(240, myLocation.getEmptyUnits().length);
-        assertEquals(460.8, myLocation.getUnit(11, 19).getStandardPrice(), .001);
-        assertEquals(153.6, myLocation.getUnit(11, 4).getStandardPrice(), .001);
+        assertEquals(106, myLocation.getEmptyUnits().length);
+        assertEquals(85.0, myLocation.getUnit(0, 0).getStandardPrice(), .001);
+        assertEquals(970.0, myLocation.getUnit(7, 0).getStandardPrice(), .001);
+        assertEquals(2890.0, myLocation.getUnit(10, 0).getStandardPrice(), .001);
     }
     
     
     @Test 
-    public void testAddGetCountCustomer() throws FileNotFoundException
-    {
-        Location myLocation = new Location("WA", "Seattle", "01"); 
+    public void testAddGetCountCustomer() throws FileNotFoundException {
+        Location myLocation = new Location("WA01Seattle", 10.0); 
         myLocation.addCustomer("Mary Barnes", "8809872345");
         assertEquals(11, myLocation.getCustCount());
         assertEquals("Mary Barnes", myLocation.getCustomer(10).getName());
@@ -65,126 +61,93 @@ public class LocationTest
     
     
     @Test 
-    public void testGetEmptyUnits() throws FileNotFoundException
-    {
-        Location myLocation = new Location("WA", "Seattle", "01"); 
-        // all of our 240 units start empty
-        assertEquals(240, myLocation.getEmptyUnits().length);
-        // each call to getEmptyUnits returns an array length 240 (3 * 240 = 720). Our Location is initialized with 240 non-null units
-        // 720 - 240 = 480
-        assertEquals(480, myLocation.countNullUnits(myLocation.getEmptyUnits(Unit.Type.HUMIDITY)) + 
-                    myLocation.countNullUnits(myLocation.getEmptyUnits(Unit.Type.TEMPERATURE)) +
-                    myLocation.countNullUnits(myLocation.getEmptyUnits(Unit.Type.REGULAR)));
+    public void testGetEmptyUnitsNoType() throws FileNotFoundException{
+        Location myLocation = new Location("WA01Seattle", 10.0); 
+        // all of our 106 units start empty
+        assertEquals(106, myLocation.getEmptyUnits().length);                 
+    }
+    
+    @Test 
+    public void testGetEmptyUnitsWithType() throws FileNotFoundException{
+        Location myLocation = new Location("WA01Seattle", 10.0); 
+        // start with 106 empty units
+        assertEquals(106, (myLocation.getEmptyUnits("humidity").length) + 
+                    (myLocation.getEmptyUnits("temperature").length) +
+                    (myLocation.getEmptyUnits("regular").length));
         // rent one unit
         myLocation.getUnit(0, 0).rentUnit(new Date(1, 8, 2017), myLocation.getCustomer(0));
-        // length of the empty units array will always be 240, so we subtract the count of null units to get the actual number of empty units
-        assertEquals(239, myLocation.getEmptyUnits().length - myLocation.countNullUnits(myLocation.getEmptyUnits()));
-        // there is now one fewer empty unit, so the total null units in the return array of empty units is one greater (480 --> 481)
-        assertEquals(481, myLocation.countNullUnits(myLocation.getEmptyUnits(Unit.Type.HUMIDITY)) + 
-                    myLocation.countNullUnits(myLocation.getEmptyUnits(Unit.Type.TEMPERATURE)) +
-                    myLocation.countNullUnits(myLocation.getEmptyUnits(Unit.Type.REGULAR)));
-                    
+        assertEquals(105, myLocation.getEmptyUnits().length);
+        assertEquals(105, (myLocation.getEmptyUnits("humidity").length) + 
+                    (myLocation.getEmptyUnits("temperature").length) +
+                    (myLocation.getEmptyUnits("regular").length));   
     }
     
     
     @Test
-    public void testCountNullUnits() throws FileNotFoundException
-    {
-        Location myLocation = new Location("WA", "Seattle", "01"); 
-        // to start, the EmptyUnits array is full because we haven't rented any of our units, thus the null count is 0
-        assertEquals(0, myLocation.countNullUnits(myLocation.getEmptyUnits()));
-        int row = 0;
-        Date date = new Date(1, 8, 2018);
-        for (int unit = 0; unit < myLocation.getCustCount(); unit++){
-            myLocation.getUnit(row, unit).rentUnit(date, myLocation.getCustomer(unit));
-        }
-        row++;
-        for (int unit = 0; unit < myLocation.getCustCount(); unit++){
-            myLocation.getUnit(row, unit).rentUnit(date, myLocation.getCustomer(unit));
-        }
-        // we just rented out 20 units above, so we  now expect the empty units array to have 20 null spaces
-        assertEquals(20, myLocation.countNullUnits(myLocation.getEmptyUnits()));
-    }
-    
-    
-    @Test
-    public void testGetUnitsForCustomer() throws FileNotFoundException
-    {
-        Location myLocation = new Location("WA", "Seattle", "01"); 
-        myLocation.addCustomer("Mary Barnes", "8809872345");
-        myLocation.addCustomer("Mary Shaw", "8809879084");
+    public void testGetUnitsForCustomer() throws FileNotFoundException {
+        Location myLocation = new Location("WA01Seattle", 10.0); 
         myLocation.getUnit(10, 0).rentUnit(new Date(1, 8, 2018), myLocation.getCustomer(0), 50);
         myLocation.getUnit(10, 1).rentUnit(new Date(1, 7, 2018), myLocation.getCustomer(0));
         myLocation.getUnit(9, 0).rentUnit(new Date(1, 9, 2018), myLocation.getCustomer(1));
-        assertEquals(238, myLocation.countNullUnits(myLocation.getUnitsForCustomer(myLocation.getCustomer(0))));
-        assertEquals(239, myLocation.countNullUnits(myLocation.getUnitsForCustomer(myLocation.getCustomer(1))));
+        assertEquals(2, myLocation.getUnitsForCustomer(myLocation.getCustomer(0)).length);
+        assertEquals(1, myLocation.getUnitsForCustomer(myLocation.getCustomer(1)).length);
     }
     
     
     @Test
-    public void testChargeRentGetRevenue() throws FileNotFoundException
-    {
-        Location myLocation = new Location("WA", "Seattle", "01"); 
+    public void testChargeRentGetRevenue() throws FileNotFoundException {
+        Location myLocation = new Location("WA01Seattle", 10.0); 
         myLocation.getUnit(0, 0).rentUnit(new Date(1, 8, 2018), myLocation.getCustomer(0));
         myLocation.chargeRent();
-        assertEquals(-68.26, myLocation.getCustomer(0).getBalance(), .01);
-        assertEquals(68.26, myLocation.getMonthlyRevenue()[0], .01);
+        assertEquals(-85.0 , myLocation.getCustomer(0).getBalance(), .001);
+        assertEquals(85.00, myLocation.getMonthlyRevenue()[0], .001);
     }
     
     
     @Test (expected = IllegalArgumentException.class)
-    public void testExceptionNumberLength() throws FileNotFoundException
-    {
-        Location myLocation = new Location("WA", "Seattle", "090");
+    public void testExceptionNumberLength() throws FileNotFoundException{
+        Location myLocation = new Location("WASeattle090", 10.0);
     }  
     
     
     @Test (expected = IllegalArgumentException.class)
-    public void testExceptionNumberDigit() throws FileNotFoundException
-    {
-        Location myLocation = new Location("WA", "Seattle", "wa");
+    public void testExceptionNumberDigit() throws FileNotFoundException{
+        Location myLocation = new Location("WASeattlewa", 10.0);
     }   
     
     
     @Test (expected = IllegalArgumentException.class)
-    public void testExceptionStateCap() throws FileNotFoundException
-    {
-        Location myLocation = new Location("wa", "Seattle", "01");
+    public void testExceptionStateCap() throws FileNotFoundException{
+        Location myLocation = new Location("wa01Seattle", 10.0);
     }    
     
     
     @Test (expected = IllegalArgumentException.class)
-    public void testExceptionStateLengthShort() throws FileNotFoundException
-    {
-        Location myLocation = new Location("W", "Seattle", "01");
+    public void testExceptionStateLengthShort() throws FileNotFoundException{
+        Location myLocation = new Location("WSeattle01", 10.0);
     }
     
     
     @Test (expected = IllegalArgumentException.class)
-    public void testExceptionStateLengthLong() throws FileNotFoundException
-    {
-        Location myLocation = new Location("WAC", "Seattle", "01");
+    public void testExceptionStateLengthLong() throws FileNotFoundException{
+        Location myLocation = new Location("WACSeattle01", 10.0);
     }
     
     
     @Test (expected = IllegalArgumentException.class)
-    public void testExceptionCityCap() throws FileNotFoundException
-    {
-        Location myLocation = new Location("WA", "seattle", "01");
+    public void testExceptionCityCap() throws FileNotFoundException{
+        Location myLocation = new Location("WA01seattle", 10.0);
     }
     
     
     @Test (expected = IllegalArgumentException.class)
-    public void testExceptionCitySpaces() throws FileNotFoundException
-    {
-        Location myLocation = new Location("WA", "Seattle Ballard", "01");
+    public void testExceptionCitySpaces() throws FileNotFoundException{
+        Location myLocation = new Location("WASeattle Ballard01", 10.0);
     }
     
     
     @Test (expected = IllegalArgumentException.class)
-    public void testExceptionCityNumbers() throws FileNotFoundException
-    {
-        Location myLocation = new Location("WA", "Seattle3", "01");
+    public void testExceptionCityNumbers() throws FileNotFoundException{
+        Location myLocation = new Location("WASeattle301", 10.0);
     }
-
-    }
+}

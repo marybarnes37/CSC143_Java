@@ -1,5 +1,3 @@
-
-
 import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.Before;
@@ -8,16 +6,15 @@ import org.junit.Test;
 /**
  * The test class DateTest.
  *
- * @author  Mary
- * @version 1/8/18
+ * @author Mary
+ * @version 1/15/18
  */
 public class DateTest
 {
     /**
      * Default constructor for test class DateTest
      */
-    public DateTest()
-    {
+    public DateTest(){
     }
 
     /**
@@ -26,8 +23,7 @@ public class DateTest
      * Called before every test case method.
      */
     @Before
-    public void setUp()
-    {
+    public void setUp(){
     }
 
     /**
@@ -36,8 +32,7 @@ public class DateTest
      * Called after every test case method.
      */
     @After
-    public void tearDown()
-    {
+    public void tearDown(){
     }
     
     @Test

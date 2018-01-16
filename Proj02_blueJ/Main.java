@@ -4,8 +4,8 @@ import java.util.Scanner;
 /**
  * Write a description of class Main here.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Mary
+ * @version 1/15/18
  */
 public class Main
 {
@@ -34,7 +34,7 @@ public class Main
     
     private static void printUnitArray(Unit[] units, Location myLocation){   
         System.out.print("\nUNITS OF INTEREST: \n");
-            for (int unitIndex = 0; unitIndex < (units.length - myLocation.countNullUnits(units)); unitIndex++){
+            for (int unitIndex = 0; unitIndex < units.length; unitIndex++){
             System.out.print(units[unitIndex]);
         }
     }
@@ -43,7 +43,7 @@ public class Main
     private static void printCustomers(Location myLocation){
         System.out.print("\nCURRENT CUSTOMERS: \n");
         for (int customerIndex = 0; customerIndex < 10; customerIndex++){
-            System.out.print(myLocation.getCustomer(customerIndex).toString());
+            System.out.print(myLocation.getCustomer(customerIndex).toString() + "\n");
         }
     }
     
@@ -64,7 +64,7 @@ public class Main
         Unit[] customerUnits;
         for (int customerIndex = 0; customerIndex < myLocation.getCustCount(); customerIndex++){
             customerUnits = myLocation.getUnitsForCustomer(myLocation.getCustomer(customerIndex));
-            for (int unit = 0; unit < (customerUnits.length - myLocation.countNullUnits(customerUnits)); unit++){
+            for (int unit = 0; unit < customerUnits.length; unit++){
                 System.out.print(customerUnits[unit].toString());
             }
         }
@@ -75,96 +75,131 @@ public class Main
      * Main method demonstrating the capacity of the other classes in project 1.
      *
      */
-    public static void main(String[] args) throws FileNotFoundException
-    {
+    public static void main(String[] args) throws FileNotFoundException {
         // first
 
         Scanner console = new Scanner(System.in);
 
-        String message = ("Welcome!\n\nFirst, let's start by initializing a new location and looking at all the units.\n" +
-                           "You'll see a line representing each unit in your new location. That's 240 lines!");                 
+        String message = ("Welcome!\n\nFirst, let's start by initializing a new location and looking at all the units. Your location is new\n" +
+                           "so the base price is just $10.00. You'll see some general information about your location at the top and then\n" +
+                           "a line representing each unit in your new location. That's 106 lines!");                 
         console = converseWithUser(console, message);
-        Location myLocation = new Location("WA", "Seattle", "01"); 
+        Location myLocation = new Location("WA01Seattle", 10.0); 
         System.out.print(myLocation);
         
-        message = ("\n\nPhew, that was a little overwhelming. But also a little underwhelming because we haven't rented any units yet.\n" +
+        message = ("\n\nPhew, that was a little overwhelming (so many units!). But also a little underwhelming because we haven't rented any units yet.\n" +
                         "However, we do have some interested customers provided for us. Let's check them out first.\n");
         console = converseWithUser(console, message);
         printCustomers(myLocation);
         
         message = ("\n\nWow, we have interesting clientele. No matter. Let's rent them each a couple of units.\n" +
-                   "We'll rent them each two units and then look at the status of those units.\n");
+                   "We'll rent out a row of each kind of units to them and then look at the status of those units.\n");
         console = converseWithUser(console, message);
         int row = 0;
         Date date = new Date(1, 8, 2018);
         for (int unit = 0; unit < myLocation.getCustCount(); unit++){
-            myLocation.getUnit(row, unit).rentUnit(date, myLocation.getCustomer(unit));
+            try {
+                myLocation.getUnit(row, unit).rentUnit(date, myLocation.getCustomer(unit));
+            }
+            catch (Exception e) {
+                break;    
+            }
         }
-        row++;
+        row = 7;
         for (int unit = 0; unit < myLocation.getCustCount(); unit++){
-            myLocation.getUnit(row, unit).rentUnit(date, myLocation.getCustomer(unit));
+            try {
+                myLocation.getUnit(row, unit).rentUnit(date, myLocation.getCustomer(unit));
+            }
+            catch (Exception e) {
+                break;    
+            }
+        }
+        row = 10;
+        for (int unit = 0; unit < myLocation.getCustCount(); unit++){
+            try {
+                myLocation.getUnit(row, unit).rentUnit(date, myLocation.getCustomer(unit));
+            }
+            catch (Exception e) {
+                break;    
+            }
         }
         printStatusOfUnits(myLocation);
         
-        message = "\n\nWe're in business! Let's check our potential monthly revenue and our actual revenue.\n";
+        message = ("\n\nGreat, some folks have one unit, others have two, and still others have three. " + 
+                   "We're in business! Let's check our potential monthly revenue and our actual revenue.\n");
         console = converseWithUser(console, message);
         printRevenue(myLocation);
                          
         message = ("\n\nNot bad. But wait a minute, your customers are here and they are demanding a discount.\n" +
-                    "You agree to create a 'two unit special' and give them each $25 off their second units.\n"+
-                    "Let's check the status of the rented units and our updated revenue.\n");
+                    "You aexplain that those of them with multiple units will already be getting a 5% discount that will.\n"+
+                    "be applied at the time of billing. You decide to demonstrate this to them. \n\nFirst, you show James Kirk"+
+                    "(index 1, renting three units) and Claire Fraser (index 9, only renting one) the full price of their units. \n");
         console = converseWithUser(console, message);
-        int secondUnitIndex = 1;
-        for (int customerIndex = 0; customerIndex < myLocation.getCustCount(); customerIndex++){
-            Unit[] customerUnits = myLocation.getUnitsForCustomer(myLocation.getCustomer(customerIndex));
-            customerUnits[secondUnitIndex].setDiscount(25.0);
-        }
-        printStatusOfUnits(myLocation);
-        printRevenue(myLocation);
         
-        message = "\n\nGreat. Now that you've rented units, you better not forget to charge rent. Let's do it. And check everyone's balances.\n";
+        int jamesIdx = 1;
+        Unit[] jamesUnits = myLocation.getUnitsForCustomer(myLocation.getCustomer(jamesIdx));
+        double jamesFullPrice = 0.0;
+        for (Unit unit : jamesUnits){
+            jamesFullPrice += unit.getStandardPrice();
+        }
+        
+        int claireIdx = 9;
+        Unit[] claireUnits = myLocation.getUnitsForCustomer(myLocation.getCustomer(claireIdx));
+        double claireFullPrice = 0.0;
+        for (Unit unit : claireUnits){
+            claireFullPrice += unit.getStandardPrice();
+        }
+        
+        System.out.print("The standard price of James' three units is: " + Helpers.formatMoney(jamesFullPrice));
+        System.out.print("\nThe standard price of Claire's one unit is: " + Helpers.formatMoney(claireFullPrice));
+        
+        message = "\n\nNext, you charge rent and display James and Claire's balances to demonstrate James' discount. Let's do it.\n";
         console = converseWithUser(console, message);
         myLocation.chargeRent();
+        
+        double jamesBalance = myLocation.getCustomer(jamesIdx).getBalance();
+        System.out.print("James' balance is: " + Helpers.formatMoney(jamesBalance));
+        double clairesBalance = myLocation.getCustomer(claireIdx).getBalance();
+        System.out.print("\nClaire's balance is: " + Helpers.formatMoney(clairesBalance));
+        
+        message = "\n\nThe customers' with multiple units are satisfied with the discount. For good measure, let's check everyone's balances.\n";
+        console = converseWithUser(console, message);
         printCustomers(myLocation);
         
-        message = ("\n\nEveryone has a negative balance now. Your customers are happy and they've started to tell their friends about \n" +
+        message = ("\n\nYup, everyone has a negative balance now. While she's here, Claire wants to go ahead and pay hers. You credit her acount\n" +
+                    "and show her that her balance is now $0.00.\n");
+        console = converseWithUser(console, message);
+        myLocation.getCustomer(claireIdx).credit(-clairesBalance);
+        clairesBalance = myLocation.getCustomer(claireIdx).getBalance();
+        System.out.print("Claire's balance is: " + Helpers.formatMoney(clairesBalance));
+        
+        message = ("\n\nYour customers are happy and they've started to tell their friends about\n" +
                     "your storage location. You've got a new potential customer and she wants to see your available units. Let's see 'em!\n");
         console = converseWithUser(console, message);  
         Unit[] emptyUnits = myLocation.getEmptyUnits();
         printUnitArray(emptyUnits, myLocation);
-        
-        message = ("\n\nThat's a lot to look at. She know she wants a regular unit without temperature or humidity control.\n " +
+                
+        message = ("\n\nThat's a lot to look at. She know she wants a temperature controlled unit.\n " +
                     "She asks to see a list of those units. Can you generate such a list? Yes, you can!\n"); 
         console = converseWithUser(console, message);        
-        Unit[] emptyRegularUnits = myLocation.getEmptyUnits(Unit.Type.REGULAR);
-        printUnitArray(emptyRegularUnits, myLocation);
+        Unit[] emptyTempUnits = myLocation.getEmptyUnits("temperature");
+        printUnitArray(emptyTempUnits, myLocation);
         
-        message = ("\n\nThat's better. The new customer wants to rent the first two available regular units. Her name is Dana Scully\n" +
-                    "and her phone number is 2061357913. She'll get the 'two unit special' as well. Let's set her up and check the results.\n");
+        message = ("\n\nThat's better. The new customer wants to rent the first available temperature unit. Her name is Dana Scully\n" +
+                    "and her phone number is 2061357913. Let's set her up and check the results.\n");
         console = converseWithUser(console, message);
         myLocation.addCustomer("Dana Scully", "2061357913");
         Customer dana = myLocation.getCustomer(myLocation.getCustCount() - 1);
-        emptyRegularUnits[0].rentUnit(new Date(1, 12, 2018), dana);
-        emptyRegularUnits[1].rentUnit(new Date(1, 12, 2018), dana, 50);
+        emptyTempUnits[0].rentUnit(new Date(1, 16, 2018), dana);
         printStatusOfUnits(myLocation);        
-        
-        message = "\n\nLooks good. Oh yay, your customer Claire Fraser (cust # 9) is here to pay her balance. First she wants to see it. Let's show her.\n";
-        console = converseWithUser(console, message);
-        double clairesBalance = myLocation.getCustomer(9).getBalance();
-        System.out.print("Claire's balance is: " + Helpers.formatMoney(clairesBalance));
-        
-        message = "\n\nShe says that looks right and pays. She wants to check her balance before she leaves to make sure her payment was registered.\n";
-        console = converseWithUser(console, message);
-        myLocation.getCustomer(9).credit(-clairesBalance);
-        clairesBalance = myLocation.getCustomer(9).getBalance();
-        System.out.print("Claire's balance is: " + Helpers.formatMoney(clairesBalance));
  
-        message = ("\n\nPerfect! Things are good at your storage location. But don't get too comfortable. Here comes Winston Smith (cust # 4).\n" +
+        message = ("\n\nPerfect! Things are good at your storage location. But don't get too comfortable. Here comes Winston Smith (idx 3).\n" +
                     "He seems a little paranoid and has decided to use a different storage location. You release his units.\n" +
                     "With these recent changes, you decide to check the status of your rented units and your revenue again.\n");
-        console = converseWithUser(console, message);        
-        Unit[] winstonsUnits = myLocation.getUnitsForCustomer(myLocation.getCustomer(4));
-        for (int unit = 0; unit < (winstonsUnits.length - myLocation.countNullUnits(winstonsUnits)) ; unit++){
+        console = converseWithUser(console, message);    
+        int winstonIdx = 3;
+        Unit[] winstonsUnits = myLocation.getUnitsForCustomer(myLocation.getCustomer(winstonIdx));
+        for (int unit = 0; unit < (winstonsUnits.length) ; unit++){
             winstonsUnits[unit].releaseUnit();
         }
         printStatusOfUnits(myLocation);

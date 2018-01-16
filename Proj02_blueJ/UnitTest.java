@@ -1,5 +1,5 @@
 
-
+import java.io.FileNotFoundException;
 import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.Before;
@@ -8,16 +8,15 @@ import org.junit.Test;
 /**
  * The test class UnitTest.
  *
- * @author  (your name)
- * @version (a version number or a date)
+ * @author Mary
+ * @version 1/15/18
  */
 public class UnitTest
 {
     /**
      * Default constructor for test class UnitTest
      */
-    public UnitTest()
-    {
+    public UnitTest(){
     }
 
     /**
@@ -26,8 +25,7 @@ public class UnitTest
      * Called before every test case method.
      */
     @Before
-    public void setUp()
-    {
+    public void setUp(){
     }
 
     
@@ -37,62 +35,53 @@ public class UnitTest
      * Called after every test case method.
      */
     @After
-    public void tearDown()
-    {
-    }
-
-    
-    @Test
-    public void testConstructor() 
-    {
-        Unit myUnit = new Unit(Unit.Type.REGULAR, 8, 12, 8);
-        assertEquals(Unit.Type.REGULAR, myUnit.getType());
-        assertEquals(51.2, myUnit.getStandardPrice(), .001);
+    public void tearDown(){
     }
     
     
     @Test
-    public void testRentUnit() 
-    {
-        Unit myUnit = new Unit(Unit.Type.REGULAR, 8, 12, 8);
+    public void testRentUnit() throws FileNotFoundException{
+        Location myLocation = new Location("WA01Seattle", 10.0);
+        Unit myUnit = new RegularUnit(myLocation, 12, 12, 12);
         Customer myCustomer = new Customer("Mary Barnes", "2065431234");
         Date myDate = new Date(1, 8, 2018);
         myUnit.rentUnit(myDate, myCustomer);
         assertEquals(myCustomer, myUnit.getCustomer());
         assertEquals(myDate, myUnit.getRentalDate());
-        assertEquals(51.2, myUnit.getPrice(), .001);
+        assertEquals(85.0, myUnit.getPrice(), .001);
     }
-
+    
     
     @Test
-    public void testSetDiscountGetPrice() 
-    {
-        Unit myUnit = new Unit(Unit.Type.REGULAR, 8, 12, 8);
+    public void testReleaseUnit() throws FileNotFoundException{
+        Location myLocation = new Location("WA01Seattle", 10.0);
+        Unit myUnit = new RegularUnit(myLocation, 12, 12, 12);
         Customer myCustomer = new Customer("Mary Barnes", "2065431234");
         Date myDate = new Date(1, 8, 2018);
         myUnit.rentUnit(myDate, myCustomer);
-        myUnit.setDiscount(24.0);
-        assertEquals(27.2, myUnit.getPrice(), .001);
+        myUnit.releaseUnit();
+        assertEquals(null, myUnit.getCustomer());
+        assertEquals(null, myUnit.getRentalDate());
+    }
+
+    
+    @Test (expected = IllegalArgumentException.class)
+    public void testPrecondtionLength() throws FileNotFoundException{
+        Location myLocation = new Location("WA01Seattle", 10.0);
+        Unit myUnit = new RegularUnit(myLocation, 9, 12, 8);
     }
     
     
     @Test (expected = IllegalArgumentException.class)
-    public void testPrecondtionLength() 
-    {
-        Unit myUnit = new Unit(Unit.Type.REGULAR, 9, 12, 8);
+    public void testPrecondtionWidth() throws FileNotFoundException{
+        Location myLocation = new Location("WA01Seattle", 10.0);
+        Unit myUnit = new RegularUnit(myLocation, 8, 11, 8);
     }
     
     
     @Test (expected = IllegalArgumentException.class)
-    public void testPrecondtionWidth() 
-    {
-        Unit myUnit = new Unit(Unit.Type.REGULAR, 8, 11, 8);
-    }
-    
-    
-    @Test (expected = IllegalArgumentException.class)
-    public void testPrecondtionHeight() 
-    {
-        Unit myUnit = new Unit(Unit.Type.REGULAR, 8, 12, 9);
+    public void testPrecondtionHeight() throws FileNotFoundException{
+        Location myLocation = new Location("WA01Seattle", 10.0);
+        Unit myUnit = new RegularUnit(myLocation, 8, 12, 9);
     }
 }

@@ -4,11 +4,10 @@ import java.util.Scanner;
 import java.text.NumberFormat;
 
 /**
- * A storage location with 240 storage units and up to 240 customers. 
+ * A storage location with 106 storage units (70 regular units, 24 humidity controlled units, and 12 temperature controlled units).
  *
  * @author Mary
- * @version 1/8/2018
- * 
+ * @version 1/15/18
  *
  */
 public class Location
@@ -18,67 +17,80 @@ public class Location
     private Unit[][] units;
     private Customer[] customers;
     private int customerCount;
-    private static final int LENGTH_WIDTH_BASE = 4;
-    private static final int HEIGHT_BASE = 6;
-    // static Map<String, int> stateCounter = new HashMap<String, int>(); // make this a hash table!! ie, Python dictionary
+    private double basePrice;
+    //location constants
+    // number of rows
+    private static final int ROWS_REG_UNIT = 7;
+    private static final int ROWS_HUMID_UNIT = 3; 
+    private static final int ROWS_TEMP_UNIT = 2; 
+    private static final int TOTAL_ROWS = ROWS_REG_UNIT + ROWS_HUMID_UNIT + ROWS_TEMP_UNIT;
+    // number of units per row
+    private static final int REG_UNIT_PER_ROW = 10;
+    private static final int HUMID_UNIT_PER_ROW = 8; 
+    private static final int TEMP_UNIT_PER_ROW = 6; 
+    private static final int TOTAL_UNITS = ROWS_REG_UNIT * REG_UNIT_PER_ROW  + ROWS_HUMID_UNIT * HUMID_UNIT_PER_ROW + ROWS_TEMP_UNIT * TEMP_UNIT_PER_ROW;
+    // dimensions of units 
+    private static final int UNIT_LENGTH = 12;
+    private static final int UNIT_HEIGHT = 12;
+    private static final int REG_UNIT_WIDTH = 12;
+    private static final int HUMID_UNIT_WIDTH = 16;
+    private static final int TEMP_UNIT_WIDTH = 20;
 
     /**
      * Constructor for objects of class Location
+     * 
+     * @param designation the designation ID for the location
+     * @throws IllegalArgumentException designation must be at least five characters and in the form 'WA01Seattle'
      */
-    public Location(String state, String city, String strNumber) throws FileNotFoundException
+    public Location(String designation, double basePrice) throws FileNotFoundException
     {
-        // check preconditions, including 
+        if (designation.length() < 5){
+            throw new IllegalArgumentException("Designation must be at least five characters and in the form 'WA01Seattle'.");
+        }
+        
+        String state = designation.substring(0, 2);
+        String strNumber = designation.substring(2, 4);
+        String city = designation.substring(4);
+        
         if (!state.matches("[A-Z]{2}") || !city.matches("[A-Z]{1}[a-zA-Z]+$")) {
             throw new IllegalArgumentException("State must be two uppercase letters. City must begin with an uppercase letter and only contain letters. No spaces allowed.");
         }
         if (!strNumber.matches("[0-9]{2}")) {
             throw new IllegalArgumentException("Number must be two digits between 00-99.");
         }
-        
-        // // increment or initialize stateCounter
-        // if (state in stateCounter) {
-            // // increment counter
-        // }
-        // else {
-            // // add state to stateCounter and initialize to 1
-        // }
-        
-        //
-        // int number = stateCounter[state];
-        // // turn 'number' into a string
-        // String strNumber = ;
-        // // initialize instance variables
-        designation = state + strNumber  + city;
-        customers = new Customer[240];
-        units = new Unit[12][20];
-        
-        // the following section initializes all units, creating a variety of type and size combinations. 
-        Unit.Type type = Unit.Type.REGULAR;
-        int length = LENGTH_WIDTH_BASE;
-        int width = LENGTH_WIDTH_BASE;
-        int height = HEIGHT_BASE;
-        for (int row = 0; row < units.length; row++){
-            if (row % 4 == 0) {
-                length += 4; // rows 0-3 = 8ft; 4-7 = 12ft, 8-11 = 16ft
-                height += 2; // rows 0-3 = 8ft; 4-7 = 10ft, 8-11 = 12ft
-            }
-            for (int unit = 0; unit < units[row].length; unit++){
-                if (unit % 4 == 0) {
-                    width += 4; // units 0-3 = 8ft; 4-7 = 12ft, 8-11 = 16ft, 12-15 = 20ft, 16-19 = 24ft
-                }
-                if (unit % 2 == 0) { // set units 4, 8, 14, 16 to type REGULAR; unit 17 will also be REGULAR
-                    type = Unit.Type.REGULAR;
-                }
-                if (unit % 3 == 0) { // set units 3, 6, 9, 12, 18 to type HUMIDITY; units 7, 13, 19 will also be HUMIDITY
-                     type = Unit.Type.HUMIDITY;
-                }
-                if (unit % 5 == 0) { // set units 0, 5, 10, 15 to type TEMPERATURE; units 1, 2, 11 will also be TEMPERATURE
-                    type = Unit.Type.TEMPERATURE;
-                }
-                units[row][unit] = new Unit(type, length, width, height);
-            }
-            width = LENGTH_WIDTH_BASE; // reset width to minimum after each row
+        if (basePrice < -75.0) {
+            throw new IllegalArgumentException("Base price must be greater than -75.00.");
         }
+        
+        // // initialize instance variables
+        this.designation = designation;
+        this.basePrice = basePrice;
+        units = new Unit[TOTAL_ROWS][];
+        customers = new Customer[TOTAL_UNITS];
+ 
+        // the following section initializes all units 
+        for (int row = 0; row < units.length; row++){
+            if (row < ROWS_REG_UNIT ) {
+                units[row] = new Unit[REG_UNIT_PER_ROW];
+                for (int unit = 0; unit < REG_UNIT_PER_ROW; unit++){
+                    units[row][unit] = new RegularUnit(this, UNIT_LENGTH, REG_UNIT_WIDTH, UNIT_HEIGHT);
+                }
+            }
+            else if ( row < ROWS_REG_UNIT + ROWS_HUMID_UNIT){
+                units[row] = new Unit[HUMID_UNIT_PER_ROW];
+                for (int unit = 0; unit < HUMID_UNIT_PER_ROW; unit++){
+                    units[row][unit] = new HumidityUnit(this, UNIT_LENGTH, HUMID_UNIT_WIDTH, UNIT_HEIGHT);                  
+                }                
+            }
+            else {
+                units[row] = new Unit[TEMP_UNIT_PER_ROW];
+                for (int unit = 0; unit < TEMP_UNIT_PER_ROW; unit++){
+                    units[row][unit] = new TemperatureUnit(this, UNIT_LENGTH, TEMP_UNIT_WIDTH, UNIT_HEIGHT);                    
+                }                  
+            }
+
+        }
+        
         // add customers to customer list
         Scanner input = new Scanner( new File("customers.txt"));
         while (input.hasNextLine()) {
@@ -100,8 +112,31 @@ public class Location
      */
     public String getDesignation()
     {
-        // put your code here
         return this.designation; 
+    }
+    
+
+     /**
+     * Get the location's base price. 
+     *
+     * @return  the base price
+     */
+    public double getBasePrice()
+    {
+        return basePrice; 
+    }
+    
+    
+     /**
+     * Set the location's base price. 
+     *
+     */
+    public void setBasePrice(double basePrice)
+    {
+        if (basePrice < -75.0) {
+            throw new IllegalArgumentException("Base price must be greater than -75.00.");
+        }
+        this.basePrice = basePrice; 
     }
     
     
@@ -146,7 +181,7 @@ public class Location
      *
      * @param name the first and last name of the customer in format John Smith
      * @param phone the phone number of the customer in format ##########
-     * @throws  IllegalArgumentException
+     * @throws  IllegalArgumentException customer name must be of forat "John Doe"; phone must be of format "##########"
      */
     public void addCustomer( String name, String phone )
     {
@@ -166,7 +201,7 @@ public class Location
         if (customer == null){
             throw new IllegalArgumentException("Customer must not be null");
         }
-        Unit[] customersUnits = new Unit[240];
+        Unit[] customersUnits = new Unit[106];
         int customersCount = 0;
         for (int row = 0; row < units.length; row++){
             for (int unit = 0; unit < units[row].length; unit++){
@@ -176,27 +211,36 @@ public class Location
                 }
             }
         }
-        return customersUnits;   
+        Unit[] customersUnitsSmall = new Unit[customersCount];
+        for (int unit = 0; unit < customersCount; unit++){
+            customersUnitsSmall[unit] = customersUnits[unit];
+        }
+        return customersUnitsSmall; 
     }
     
     
      /**
      * Charge rent for all units belonging to the location. 
      *
-     * @param y a sample parameter for a method
-     * @return  the sum of x and y
      */
     public void chargeRent()
-    {
-        double price;
-        for (int row = 0; row < units.length; row++){
-            for (int unit = 0; unit < units[row].length; unit++){
-                if (units[row][unit].isRented()) {
-                    price = units[row][unit].getPrice();
-                    units[row][unit].getCustomer().charge(price);
+    {  
+        for ( int customer = 0; customer < customerCount; customer++) {
+            Unit[] customersUnits = getUnitsForCustomer(customers[customer]);
+            double totalCharge = 0.0;
+            if (customersUnits.length > 1){
+                for (Unit unit : customersUnits) {
+                    totalCharge += unit.getPrice();
                 }
+                totalCharge = totalCharge * 0.95;
+                customers[customer].charge(totalCharge);
             }
-        }    
+            else if (customersUnits.length > 0){
+                customers[customer].charge(customersUnits[0].getPrice());
+            }
+            else{
+            }
+        }
     }
     
     
@@ -211,7 +255,7 @@ public class Location
         double possibleRevenue = 0;
         for (int row = 0; row < units.length; row++){
             for (int unit = 0; unit < units[row].length; unit++){
-                if (units[row][unit].isRented()) {
+                if (units[row][unit].getCustomer() != null) {
                     revenue += units[row][unit].getPrice();
                 }
                 possibleRevenue += units[row][unit].getStandardPrice();
@@ -228,17 +272,21 @@ public class Location
      */
     public Unit[] getEmptyUnits( )
     {
-        Unit[] emptyUnits = new Unit[240];
+        Unit[] emptyUnits = new Unit[106];
         int emptyCount = 0;
-            for (int row = 0; row < units.length; row++){
-                for (int unit = 0; unit < units[row].length; unit++){
-                    if (!units[row][unit].isRented()) {
-                        emptyUnits[emptyCount] = units[row][unit];
-                        emptyCount++;
-                    }
+        for (int row = 0; row < units.length; row++){
+            for (int unit = 0; unit < units[row].length; unit++){
+                if (units[row][unit].getCustomer() == null) {
+                    emptyUnits[emptyCount] = units[row][unit];
+                    emptyCount++;
                 }
             }
-        return emptyUnits;
+        }
+        Unit[] emptyUnitsSmall = new Unit[emptyCount];
+        for (int unit = 0; unit < emptyCount; unit++){
+            emptyUnitsSmall[unit] = emptyUnits[unit];
+        }
+        return emptyUnitsSmall;
         }
     
         
@@ -248,36 +296,26 @@ public class Location
      * @param  type  the type of unit
      * @return    array of empty units
      */    
-    public Unit[] getEmptyUnits( Unit.Type type )
+    public Unit[] getEmptyUnits( String type )
     {
-        Unit[] emptyUnits = new Unit[240];
+        if (!type.equals("regular") & !type.equals("humidity") & !type.equals("temperature")) {
+            throw new IllegalArgumentException("Type must be regular, humidity or temperature.");
+        }
+        Unit[] emptyUnits = new Unit[70];
         int emptyCount = 0;
             for (int row = 0; row < units.length; row++){
                 for (int unit = 0; unit < units[row].length; unit++){
-                    if (!units[row][unit].isRented() & (units[row][unit].getType() == type)) {
+                    if (units[row][unit].getCustomer() == null & units[row][unit].getType().equals(type)) {
                         emptyUnits[emptyCount] = units[row][unit];
                         emptyCount++;
                     }
                 }
             }
-        return emptyUnits;
-    }
- 
-    
-     /**
-     * Get the number of null units in an array. 
-     *
-     * @param  units  the array of units to be counted
-     * @return    the number of empty units
-     */
-    public int countNullUnits( Unit[] units){
-        int nullCount = 0;
-        for (int unit = 0; unit < units.length; unit++){
-            if (units[unit] == null ){
-                nullCount++;
-            }
+        Unit[] emptyUnitsSmall = new Unit[emptyCount];
+        for (int unit = 0; unit < emptyCount; unit++){
+            emptyUnitsSmall[unit] = emptyUnits[unit];
         }
-        return nullCount;
+        return emptyUnitsSmall;
     }
     
     
@@ -289,17 +327,16 @@ public class Location
     public String toString()
     {
         double[] revenue = getMonthlyRevenue();
-        String locationString =  ("\ndesignation: " + designation + "\ncustomer_count: " + customerCount + "\n# total_units: " 
-                + (units.length * units[0].length) + "\n# empty_units: " + (getEmptyUnits().length - countNullUnits(getEmptyUnits())) +
+        String locationString =  ("\ndesignation: " + designation + "\nbase_price: " + basePrice + "\ncustomer_count: " + customerCount + "\n# total_units: " 
+                + TOTAL_UNITS + "\n# empty_units: " + getEmptyUnits().length +
                 "\ncurrent_monthly_revenue: " + Helpers.formatMoney(revenue[0]) + "\npossible_monthly_revenue: " + Helpers.formatMoney(revenue[1]) +
                 "\n\nUNITS:" + units.toString());
         for (int row = 0; row < units.length; row++){
             for (int unit = 0; unit < units[row].length; unit++){
-                locationString += "\nunit " + row + "-" + unit + "\t";
+                locationString += "unit " + row + "-" + unit + "\t";
                 locationString += units[row][unit].toString();
             }
         }
-        return locationString;
-                
+        return locationString;         
     }
 }

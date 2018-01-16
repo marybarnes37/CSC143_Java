@@ -1,6 +1,6 @@
 #BlueJ class context
 comment0.target=LocationTest
-comment0.text=\n\ The\ test\ class\ LocationTest.\n\n\ @author\ \ (your\ name)\n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment0.text=\n\ The\ test\ class\ LocationTest.\n\n\ @author\ Mary\n\ @version\ 1/15/18\n
 comment1.params=
 comment1.target=LocationTest()
 comment1.text=\n\ Default\ constructor\ for\ test\ class\ LocationTest\n
@@ -31,9 +31,9 @@ comment4.target=void\ testConstructor()
 comment5.params=
 comment5.target=void\ testAddGetCountCustomer()
 comment6.params=
-comment6.target=void\ testGetEmptyUnits()
+comment6.target=void\ testGetEmptyUnitsNoType()
 comment7.params=
-comment7.target=void\ testCountNullUnits()
+comment7.target=void\ testGetEmptyUnitsWithType()
 comment8.params=
 comment8.target=void\ testGetUnitsForCustomer()
 comment9.params=

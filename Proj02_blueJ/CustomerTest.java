@@ -8,8 +8,8 @@ import org.junit.Test;
 /**
  * The test class CustomerTest.
  *
- * @author  (your name)
- * @version (a version number or a date)
+ * @author Mary
+ * @version 1/15/18
  */
 public class CustomerTest
 {
@@ -42,24 +42,21 @@ public class CustomerTest
     
     
     @Test
-    public void testConstructor() 
-    {
+    public void testConstructor(){
         Customer myCustomer = new Customer("Mary Barnes", "2065431234");
         assertEquals("Mary Barnes", myCustomer.getName());
         assertEquals("2065431234", myCustomer.getPhone());
     }
     
     @Test
-    public void testSetPhone() 
-    {
+    public void testSetPhone(){
         Customer myCustomer = new Customer("Mary Barnes", "2065431234");
         myCustomer.setPhone("8889990000");
         assertEquals("8889990000", myCustomer.getPhone());
     }
     
     @Test
-    public void testSetName() 
-    {
+    public void testSetName(){
         Customer myCustomer = new Customer("Mary Barnes", "2065431234");
         myCustomer.setName("John Oliver");
         assertEquals("John Oliver", myCustomer.getName());
@@ -67,56 +64,40 @@ public class CustomerTest
     
     @Test
     public void testCreditAndCharge() throws FileNotFoundException {
-        Location myLocation = new Location("WA", "Seattle", "01");
+        Location myLocation = new Location("WA01Seattle", 10.0);
         Customer myCustomer = new Customer("Mary Barnes", "2065431234");
         myLocation.getUnit(0, 0).rentUnit(new Date(1, 8, 2018), myCustomer);
-        myLocation.chargeRent();
-        assertEquals(-68.27, myCustomer.getBalance(), .1);
-        myCustomer.credit(68.27);
-        assertEquals(0.0, myCustomer.getBalance(), .1);
+        assertEquals(85.0, myLocation.getUnit(0, 0).getPrice(), 001);
+        assertEquals(1, myLocation.getUnitsForCustomer(myCustomer).length);
+        assertEquals(myLocation.getUnit(0, 0), myLocation.getUnitsForCustomer(myCustomer)[0]);
+        //myLocation.chargeRent();
+        myCustomer.charge(85.0);
+        assertEquals(-85.0, myCustomer.getBalance(), .001);
+        myCustomer.credit(85.0);
+        assertEquals(0.0, myCustomer.getBalance(), .001);
     }
     
     
-    // @Test
-    // public void checkToString() throws FileNotFoundException {
-        // Location myLocation = new Location("WA", "Seattle", "01");
-        // Customer myCustomer = new Customer("Mary Barnes", "2065431234");
-        // myLocation.getUnit(0, 0).rentUnit(new Date(1, 8, 2018), myCustomer);
-        // myLocation.chargeRent();
-        // assertEquals("customer_name: Mary Barnes    customer_phone: 2065431234  customer_balance: (68.27)\n", myCustomer.toString());
-    // }
-    
-    
-    // @Test (expected = IllegalArgumentException.class)
-    // public void testCheckAmount(){
-        // Customer.checkAmount(-5.0);
-    // }
-    
-    
     @Test (expected = IllegalArgumentException.class)
-    public void testCheckNameSpace() 
-    {
+    public void testCheckNameSpace() {
         Customer myCustomer = new Customer("MaryBarnes", "2065431234");
     }
     
     
     @Test (expected = IllegalArgumentException.class)
-    public void testCheckNameCapital() 
-    {
+    public void testCheckNameCapital() {
         Customer myCustomer = new Customer("mary Barnes", "2065431234");
     }
     
     
     @Test (expected = IllegalArgumentException.class)
-    public void testCheckPhoneLength() 
-    {
+    public void testCheckPhoneLength() {
         Customer myCustomer = new Customer("Mary Barnes", "20654312341");
     }
 
     
     @Test (expected = IllegalArgumentException.class)
-    public void testCheckPhoneDigits() 
-    {
+    public void testCheckPhoneDigits() {
         Customer myCustomer = new Customer("Mary Barnes", "2b65431234");
     }
 }

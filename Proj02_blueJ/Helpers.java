@@ -4,7 +4,7 @@ import java.text.NumberFormat;
  * Helpers needed in all classes.
  *
  * @author Mary
- * @version 1/8/2018
+ * @version 1/15/18
  */
 public class Helpers
 {
