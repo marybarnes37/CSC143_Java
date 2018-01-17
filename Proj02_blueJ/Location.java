@@ -272,22 +272,26 @@ public class Location
      */
     public Unit[] getEmptyUnits( )
     {
-        Unit[] emptyUnits = new Unit[106];
         int emptyCount = 0;
-        for (int row = 0; row < units.length; row++){
-            for (int unit = 0; unit < units[row].length; unit++){
-                if (units[row][unit].getCustomer() == null) {
-                    emptyUnits[emptyCount] = units[row][unit];
-                    emptyCount++;
+            for (int row = 0; row < units.length; row++){
+                for (int unit = 0; unit < units[row].length; unit++){
+                    if (units[row][unit].getCustomer() == null) {
+                        emptyCount++;
+                    }
                 }
             }
-        }
-        Unit[] emptyUnitsSmall = new Unit[emptyCount];
-        for (int unit = 0; unit < emptyCount; unit++){
-            emptyUnitsSmall[unit] = emptyUnits[unit];
-        }
-        return emptyUnitsSmall;
-        }
+        Unit[] emptyUnits = new Unit[emptyCount];
+        emptyCount = 0;
+            for (int row = 0; row < units.length; row++){
+                for (int unit = 0; unit < units[row].length; unit++){
+                    if (units[row][unit].getCustomer() == null) {
+                        emptyUnits[emptyCount] = units[row][unit];
+                        emptyCount++;
+                    }
+                }
+            }
+        return emptyUnits;
+    }
     
         
      /**
@@ -301,8 +305,16 @@ public class Location
         if (!type.equals("regular") & !type.equals("humidity") & !type.equals("temperature")) {
             throw new IllegalArgumentException("Type must be regular, humidity or temperature.");
         }
-        Unit[] emptyUnits = new Unit[70];
         int emptyCount = 0;
+            for (int row = 0; row < units.length; row++){
+                for (int unit = 0; unit < units[row].length; unit++){
+                    if (units[row][unit].getCustomer() == null & units[row][unit].getType().equals(type)) {
+                        emptyCount++;
+                    }
+                }
+            }
+        Unit[] emptyUnits = new Unit[emptyCount];
+        emptyCount = 0;
             for (int row = 0; row < units.length; row++){
                 for (int unit = 0; unit < units[row].length; unit++){
                     if (units[row][unit].getCustomer() == null & units[row][unit].getType().equals(type)) {
@@ -311,11 +323,46 @@ public class Location
                     }
                 }
             }
-        Unit[] emptyUnitsSmall = new Unit[emptyCount];
-        for (int unit = 0; unit < emptyCount; unit++){
-            emptyUnitsSmall[unit] = emptyUnits[unit];
+        return emptyUnits;
+    }
+    
+    
+     /**
+     * Get the map representation of the location. 
+     *
+     * @return    the map representation of the location
+     */
+    public String toMap()
+    {
+        String line = "\n-------------------------------------------\n";
+        String mapString = line + "Unit Map for Location " + designation + line + "\t0\t1\t2\t3\t4\t5\t6\t7\t8\t9\n\n";
+        String rowString = "";
+        String type;
+        String letter;
+        for (int row = 0; row < units.length; row++){
+            rowString = row + ":";
+            for (int unit = 0; unit < units[row].length; unit++){
+                if (units[row][unit].getType() == "regular"){
+                    letter = "S";
+                }
+                else if (units[row][unit].getType() == "humidity"){
+                    letter = "H";
+                }
+                else {
+                    letter = "T";
+                }
+                rowString += "\t" + letter;
+                if (units[row][unit].getCustomer() != null){
+                    rowString += "*";
+                }
+                else{
+                    rowString += "_";
+                }
+            }
+            mapString += rowString + "\n";
+            rowString = "";
         }
-        return emptyUnitsSmall;
+        return mapString;         
     }
     
     

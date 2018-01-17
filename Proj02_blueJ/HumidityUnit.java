@@ -15,7 +15,7 @@ public class HumidityUnit extends Unit
      */
     public HumidityUnit(Location location, int length, int width, int height ){
         // initialise instance variables
-        super(location, length, width, height);
+        super(location, length, width, height, TYPE);
     }
     
     
@@ -29,13 +29,5 @@ public class HumidityUnit extends Unit
         return standardPrice;
     }
     
-    
-    /**
-     * Get the type of the the unit
-     *
-     * @return    the type of the unit
-     */
-    public String getType(){
-        return TYPE;
-    }
+   
 }

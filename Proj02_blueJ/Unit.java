@@ -1,4 +1,6 @@
 import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * A single storage unit. 
@@ -15,16 +17,17 @@ public abstract class Unit
     private double standardPrice;
     private int length;
     private int width;
-    private int height; 
+    private int height;
+    private String type;
     // instance variables that will be set at time of rental
     private Customer customer;
-    private Date rentalDate;
+    private LocalDate rentalDate;
     private double rentalPrice;
 
     /**
      * Constructor for objects of class Unit
      */
-    public Unit(Location location, int length, int width, int height){
+    public Unit(Location location, int length, int width, int height, String type){
         if (length % 4 != 0 || width % 4 != 0 || length < 4 || width < 4 ){
             throw new IllegalArgumentException("Length and width arguments must be positive and divisible by 4.");
         }
@@ -35,6 +38,7 @@ public abstract class Unit
         this.length = length;
         this.width = width;
         this.height = height;
+        this.type = type;
         standardPrice = calcStandardPrice();
     }
     
@@ -52,7 +56,9 @@ public abstract class Unit
      *
      * @return    the type of the unit
      */
-    public abstract String getType();
+    public String getType(){
+        return type;
+    }
 
 
     /**
@@ -140,35 +146,58 @@ public abstract class Unit
      *
      * @return    the rental start date of the unit
      */
-    public Date getRentalDate(){
+    public LocalDate getRentalDate(){
         return rentalDate;
     }
     
     
-     /**
-     * Rent the unit at a discount. 
-     *
-     * @param  date  the date the rental starts
-     * @param  customer  the customer of the unit
-     * @param  monthlyDiscount  the discount
-     * @throws IllegalArgumentException customer and date must not be null, monthly discount must be a positive amount
-     */
-    public void rentUnit( Date date, Customer customer, double monthlyDiscount ){
+     // /**
+     // * Rent the unit at a discount. 
+     // *
+     // * @param  date  the date the rental starts
+     // * @param  customer  the customer of the unit
+     // * @param  monthlyDiscount  the discount
+     // * @throws IllegalArgumentException customer and date must not be null, monthly discount must be a positive amount
+     // */
+    // public void rentUnit( Date date, Customer customer, double monthlyDiscount ){
+        // if (customer == null){
+            // throw new IllegalArgumentException("Customer must not be null.");
+        // }
+        // if (date == null){
+            // throw new IllegalArgumentException("Date must not be null.");
+        // }
+        // if (monthlyDiscount < 0.0){
+            // throw new IllegalArgumentException("Monthly discount must be a positive amount.");
+        // }
+        // this.customer = customer;
+        // rentalDate = date;
+        // rentalPrice = standardPrice - monthlyDiscount;
+    // }
+    
+    public void rentUnit( Customer customer, double monthlyDiscount ){
         if (customer == null){
             throw new IllegalArgumentException("Customer must not be null.");
-        }
-        if (date == null){
-            throw new IllegalArgumentException("Date must not be null.");
         }
         if (monthlyDiscount < 0.0){
             throw new IllegalArgumentException("Monthly discount must be a positive amount.");
         }
         this.customer = customer;
-        rentalDate = date;
+        rentalDate = LocalDate.now();
         rentalPrice = standardPrice - monthlyDiscount;
     }
 
-    
+
+     // /**
+     // * Rent the unit without a discount.
+     // *
+     // * @param  date  the date the rental starts
+     // * @param  customer  the customer of the unit
+     // * @throws IllegalArgumentException customer and date must not be null, monthly discount must be a positive amount
+     // */
+    // public void rentUnit( Date date, Customer customer){
+        // rentUnit(date, customer, 0.0);
+    // }
+   
      /**
      * Rent the unit without a discount.
      *
@@ -176,11 +205,11 @@ public abstract class Unit
      * @param  customer  the customer of the unit
      * @throws IllegalArgumentException customer and date must not be null, monthly discount must be a positive amount
      */
-    public void rentUnit( Date date, Customer customer){
-        rentUnit(date, customer, 0.0);
+    public void rentUnit(Customer customer){
+        rentUnit(customer, 0.0);
     }
-   
-     
+
+        
      /**
      * Release the unit.
      *
@@ -199,7 +228,7 @@ public abstract class Unit
      */
     public String toString(){
         if (customer != null){
-            return (customer.toString() +  "\trental_date: " + rentalDate.toString() + 
+            return (customer.toString() +  "\trental_date: " + DateTimeFormatter.ofPattern("MM/dd/yyyy").format(rentalDate) + 
                     "\trental_price: " + Helpers.formatMoney(rentalPrice) + "\tstandard_price: " + Helpers.formatMoney(standardPrice) + "\tdimensions: " 
                     + length + "x" + width + "x" + height + "\ttype: " + this.getClass().getName() + "\n");
         }

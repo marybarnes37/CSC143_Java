@@ -87,6 +87,10 @@ public class Main
         Location myLocation = new Location("WA01Seattle", 10.0); 
         System.out.print(myLocation);
         
+        message = ("\n\nWe also have a map view of our units. Let's see that now.\n");
+        console = converseWithUser(console, message);
+        System.out.print(myLocation.toMap());
+        
         message = ("\n\nPhew, that was a little overwhelming (so many units!). But also a little underwhelming because we haven't rented any units yet.\n" +
                         "However, we do have some interested customers provided for us. Let's check them out first.\n");
         console = converseWithUser(console, message);
@@ -96,10 +100,9 @@ public class Main
                    "We'll rent out a row of each kind of units to them and then look at the status of those units.\n");
         console = converseWithUser(console, message);
         int row = 0;
-        Date date = new Date(1, 8, 2018);
         for (int unit = 0; unit < myLocation.getCustCount(); unit++){
             try {
-                myLocation.getUnit(row, unit).rentUnit(date, myLocation.getCustomer(unit));
+                myLocation.getUnit(row, unit).rentUnit(myLocation.getCustomer(unit));
             }
             catch (Exception e) {
                 break;    
@@ -108,7 +111,7 @@ public class Main
         row = 7;
         for (int unit = 0; unit < myLocation.getCustCount(); unit++){
             try {
-                myLocation.getUnit(row, unit).rentUnit(date, myLocation.getCustomer(unit));
+                myLocation.getUnit(row, unit).rentUnit(myLocation.getCustomer(unit));
             }
             catch (Exception e) {
                 break;    
@@ -117,7 +120,7 @@ public class Main
         row = 10;
         for (int unit = 0; unit < myLocation.getCustCount(); unit++){
             try {
-                myLocation.getUnit(row, unit).rentUnit(date, myLocation.getCustomer(unit));
+                myLocation.getUnit(row, unit).rentUnit(myLocation.getCustomer(unit));
             }
             catch (Exception e) {
                 break;    
@@ -190,7 +193,7 @@ public class Main
         console = converseWithUser(console, message);
         myLocation.addCustomer("Dana Scully", "2061357913");
         Customer dana = myLocation.getCustomer(myLocation.getCustCount() - 1);
-        emptyTempUnits[0].rentUnit(new Date(1, 16, 2018), dana);
+        emptyTempUnits[0].rentUnit(dana);
         printStatusOfUnits(myLocation);        
  
         message = ("\n\nPerfect! Things are good at your storage location. But don't get too comfortable. Here comes Winston Smith (idx 3).\n" +
@@ -209,6 +212,10 @@ public class Main
                     "For good measure, you decide to look over all of your units one last time. Let's take a final look.\n");
         console = converseWithUser(console, message);       
         System.out.print(myLocation.toString());
+        
+        message = ("\n\nAnd finally (I Promise!), the map one more time.\n");
+        console = converseWithUser(console, message);
+        System.out.print(myLocation.toMap());
         
         System.out.print("\n\n\nThank you!");
         

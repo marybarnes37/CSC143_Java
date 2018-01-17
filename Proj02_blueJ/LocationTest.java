@@ -75,7 +75,7 @@ public class LocationTest
                     (myLocation.getEmptyUnits("temperature").length) +
                     (myLocation.getEmptyUnits("regular").length));
         // rent one unit
-        myLocation.getUnit(0, 0).rentUnit(new Date(1, 8, 2017), myLocation.getCustomer(0));
+        myLocation.getUnit(0, 0).rentUnit(myLocation.getCustomer(0));
         assertEquals(105, myLocation.getEmptyUnits().length);
         assertEquals(105, (myLocation.getEmptyUnits("humidity").length) + 
                     (myLocation.getEmptyUnits("temperature").length) +
@@ -86,9 +86,9 @@ public class LocationTest
     @Test
     public void testGetUnitsForCustomer() throws FileNotFoundException {
         Location myLocation = new Location("WA01Seattle", 10.0); 
-        myLocation.getUnit(10, 0).rentUnit(new Date(1, 8, 2018), myLocation.getCustomer(0), 50);
-        myLocation.getUnit(10, 1).rentUnit(new Date(1, 7, 2018), myLocation.getCustomer(0));
-        myLocation.getUnit(9, 0).rentUnit(new Date(1, 9, 2018), myLocation.getCustomer(1));
+        myLocation.getUnit(10, 0).rentUnit( myLocation.getCustomer(0), 50);
+        myLocation.getUnit(10, 1).rentUnit(myLocation.getCustomer(0));
+        myLocation.getUnit(9, 0).rentUnit(myLocation.getCustomer(1));
         assertEquals(2, myLocation.getUnitsForCustomer(myLocation.getCustomer(0)).length);
         assertEquals(1, myLocation.getUnitsForCustomer(myLocation.getCustomer(1)).length);
     }
@@ -97,7 +97,7 @@ public class LocationTest
     @Test
     public void testChargeRentGetRevenue() throws FileNotFoundException {
         Location myLocation = new Location("WA01Seattle", 10.0); 
-        myLocation.getUnit(0, 0).rentUnit(new Date(1, 8, 2018), myLocation.getCustomer(0));
+        myLocation.getUnit(0, 0).rentUnit(myLocation.getCustomer(0));
         myLocation.chargeRent();
         assertEquals(-85.0 , myLocation.getCustomer(0).getBalance(), .001);
         assertEquals(85.00, myLocation.getMonthlyRevenue()[0], .001);

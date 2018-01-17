@@ -1,20 +1,19 @@
 #BlueJ class context
 comment0.target=Unit
 comment0.text=\n\ A\ single\ storage\ unit.\ \n\n\ @author\ Mary\n\ @version\ 1/15/18\n
-comment1.params=location\ length\ width\ height
-comment1.target=Unit(Location,\ int,\ int,\ int)
+comment1.params=location\ length\ width\ height\ type
+comment1.target=Unit(Location,\ int,\ int,\ int,\ java.lang.String)
 comment1.text=\n\ Constructor\ for\ objects\ of\ class\ Unit\n
 comment10.params=
 comment10.target=Customer\ getCustomer()
 comment10.text=\n\ Get\ the\ customer\ renting\ the\ unit\n\n\ @return\ \ \ \ the\ customer\ renting\ the\ unit\n
 comment11.params=
-comment11.target=Date\ getRentalDate()
+comment11.target=java.time.LocalDate\ getRentalDate()
 comment11.text=\n\ Get\ the\ rental\ start\ date\ of\ the\ unit\n\n\ @return\ \ \ \ the\ rental\ start\ date\ of\ the\ unit\n
-comment12.params=date\ customer\ monthlyDiscount
-comment12.target=void\ rentUnit(Date,\ Customer,\ double)
-comment12.text=\n\ Rent\ the\ unit\ at\ a\ discount.\ \n\n\ @param\ \ date\ \ the\ date\ the\ rental\ starts\n\ @param\ \ customer\ \ the\ customer\ of\ the\ unit\n\ @param\ \ monthlyDiscount\ \ the\ discount\n\ @throws\ IllegalArgumentException\ customer\ and\ date\ must\ not\ be\ null,\ monthly\ discount\ must\ be\ a\ positive\ amount\n
-comment13.params=date\ customer
-comment13.target=void\ rentUnit(Date,\ Customer)
+comment12.params=customer\ monthlyDiscount
+comment12.target=void\ rentUnit(Customer,\ double)
+comment13.params=customer
+comment13.target=void\ rentUnit(Customer)
 comment13.text=\n\ Rent\ the\ unit\ without\ a\ discount.\n\n\ @param\ \ date\ \ the\ date\ the\ rental\ starts\n\ @param\ \ customer\ \ the\ customer\ of\ the\ unit\n\ @throws\ IllegalArgumentException\ customer\ and\ date\ must\ not\ be\ null,\ monthly\ discount\ must\ be\ a\ positive\ amount\n
 comment14.params=
 comment14.target=void\ releaseUnit()

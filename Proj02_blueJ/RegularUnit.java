@@ -15,7 +15,7 @@ public class RegularUnit extends Unit
      */
     public RegularUnit(Location location, int length, int width, int height){
         // initialise instance variables
-        super(location, length, width, height);
+        super(location, length, width, height, TYPE);
     }
    
     
@@ -27,15 +27,5 @@ public class RegularUnit extends Unit
     public double calcStandardPrice(){
         double standardPrice = getLocation().getBasePrice() + BASE_RATE;
         return standardPrice;
-    }
-    
-
-    /**
-     * Get the type of the the unit
-     *
-     * @return    the type of the unit
-     */
-    public String getType(){
-        return TYPE;
     }
 }

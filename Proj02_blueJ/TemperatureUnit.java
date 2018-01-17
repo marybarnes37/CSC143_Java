@@ -14,7 +14,7 @@ public class TemperatureUnit extends Unit
      * Constructor for objects of class TemperatureUnit
      */
     public TemperatureUnit(Location location, int length, int width, int height){
-        super(location, length, width, height);
+        super(location, length, width, height, TYPE);
     }
     
    
@@ -26,14 +26,5 @@ public class TemperatureUnit extends Unit
     public double calcStandardPrice(){
         double standardPrice = getLocation().getBasePrice() + CUBIC_FT_RATE * getLength() *getWidth() * getHeight();
         return standardPrice;
-    }
-    
-    /**
-     * Get the type of the the unit
-     *
-     * @return    the type of the unit
-     */
-    public String getType(){
-        return TYPE;
     }
 }

@@ -66,7 +66,7 @@ public class CustomerTest
     public void testCreditAndCharge() throws FileNotFoundException {
         Location myLocation = new Location("WA01Seattle", 10.0);
         Customer myCustomer = new Customer("Mary Barnes", "2065431234");
-        myLocation.getUnit(0, 0).rentUnit(new Date(1, 8, 2018), myCustomer);
+        myLocation.getUnit(0, 0).rentUnit( myCustomer);
         assertEquals(85.0, myLocation.getUnit(0, 0).getPrice(), 001);
         assertEquals(1, myLocation.getUnitsForCustomer(myCustomer).length);
         assertEquals(myLocation.getUnit(0, 0), myLocation.getUnitsForCustomer(myCustomer)[0]);

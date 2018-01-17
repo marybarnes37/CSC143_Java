@@ -1,5 +1,6 @@
 
 import java.io.FileNotFoundException;
+import java.time.LocalDate;
 import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.Before;
@@ -40,14 +41,13 @@ public class UnitTest
     
     
     @Test
-    public void testRentUnit() throws FileNotFoundException{
+    public void testRentUnitGetDate() throws FileNotFoundException{
         Location myLocation = new Location("WA01Seattle", 10.0);
         Unit myUnit = new RegularUnit(myLocation, 12, 12, 12);
         Customer myCustomer = new Customer("Mary Barnes", "2065431234");
-        Date myDate = new Date(1, 8, 2018);
-        myUnit.rentUnit(myDate, myCustomer);
+        myUnit.rentUnit(myCustomer);
         assertEquals(myCustomer, myUnit.getCustomer());
-        assertEquals(myDate, myUnit.getRentalDate());
+        assertEquals(LocalDate.now(), myUnit.getRentalDate());
         assertEquals(85.0, myUnit.getPrice(), .001);
     }
     
@@ -57,8 +57,7 @@ public class UnitTest
         Location myLocation = new Location("WA01Seattle", 10.0);
         Unit myUnit = new RegularUnit(myLocation, 12, 12, 12);
         Customer myCustomer = new Customer("Mary Barnes", "2065431234");
-        Date myDate = new Date(1, 8, 2018);
-        myUnit.rentUnit(myDate, myCustomer);
+        myUnit.rentUnit( myCustomer);
         myUnit.releaseUnit();
         assertEquals(null, myUnit.getCustomer());
         assertEquals(null, myUnit.getRentalDate());
